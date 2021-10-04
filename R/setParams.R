@@ -7,7 +7,7 @@
 #' @export
 setParams <- function(method = "Seurat", ...){
     availableMethods = c("Seurat", "Scanorama", "Harmony", 
-                        "Liger", "BBKNN", "SMILE", "Uncorrected", "fastMNN") # list available availableMethods
+                        "Liger", "BBKNN", "SMILE", "Uncorrected", "fastMNN", "scVI") # list available availableMethods
 
     ### checking valid parameters ###
     if(!(method %in% availableMethods)){
@@ -23,6 +23,7 @@ setParams <- function(method = "Seurat", ...){
               "BBKNN" = new("BBKNNParams", ...),
               "SMILE" = new("SMILEParams", ...),
               "Uncorrected" = new("UncorrectedParams", ...),
-              "fastMNN" = new("FastMNNParams", ...))
+              "fastMNN" = new("FastMNNParams", ...),
+              "scVI" = new("scVIParams", ...))
     return(x)
 }

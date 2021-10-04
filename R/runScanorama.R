@@ -72,7 +72,7 @@ Data.write(filename = 'temp.h5ad')")
     return(integrated)
   }
   else if(params@return == "SingleCellExperiment"){
-    data = Seurat::as.SingleCellExperiment(integrated)
+    integrated = Seurat::as.SingleCellExperiment(integrated)
     return(integrated)
   }
   else{

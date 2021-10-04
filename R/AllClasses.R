@@ -307,3 +307,30 @@ setClass(
             npcs = 20,
             name = "SMILE")
 )
+
+#' scVIParams
+#'
+#' @export
+setClass(
+	'scVIParams', 
+	representation(min_cells = "numeric",
+          min_genes = "numeric",
+          batch_size = "numeric",
+          return_dense = "logical",
+          knn = "numeric",
+          svd_solver = "character",
+          npcs = "numeric",
+          nhvg = "numeric",
+          use_cuda = "logical"),
+	contains = c('parent'),
+  prototype(min_genes = 300,
+            min_cells = 5,
+            batch_size = 30,
+            return_dense = TRUE,
+            knn = 10,
+            svd_solver = "arpack",
+            npcs = 20,
+            nhvg = 2000,
+            name = "Scanorama",
+            use_cuda = TRUE)
+)

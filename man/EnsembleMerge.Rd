@@ -7,10 +7,13 @@
 EnsembleMerge(
   data,
   methods = c("Seurat", "Harmony"),
-  return = "SingleCellExperiment",
+  return = "Seurat",
   a = 1,
   b = 1,
-  file = NA
+  file = NA,
+  normalization_method = "LogNormalize",
+  latent = FALSE,
+  ...
 )
 }
 \arguments{

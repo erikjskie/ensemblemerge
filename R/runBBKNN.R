@@ -2,7 +2,6 @@
 #'
 #' @import reticulate
 #' @import Seurat
-#' @import Matrix
 #' @import methods
 #' @import SparseM
 #' @import SingleCellExperiment

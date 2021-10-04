@@ -4,7 +4,7 @@
 #' @return returns vector of valid names for integration methods
 #' @export
 getMethods <- function(){
-  Methods = c("Seurat", "Harmony", "Liger", "Scanorama", "BBKNN", "fastMNN", "Uncorrected")
+  Methods = c("Seurat", "Harmony", "Liger", "Scanorama", "BBKNN", "fastMNN", "Uncorrected", "scVI")
   return(Methods)
 }
 
@@ -22,11 +22,12 @@ getParams <- function(){
 #'
 #' @import Seurat
 #' @import SingleCellExperiment
+#' @import Matrix
 #'
 #' @param x SummarizedExpirement object containing single cell counts matrix
 #' @return returns a SummarizedExperiment object of the integrated data
 #' @export
-EnsembleMerge <- function(data, methods = c("Seurat", "Harmony"), return = "SingleCellExperiment", a = 1, b = 1, file = NA){
+EnsembleMerge <- function(data, methods = c("Seurat", "Harmony"), return = "Seurat", a = 1, b = 1, file = NA, normalization_method = "LogNormalize", latent = FALSE, ...){
 
   #* Add error if methods is not of class character or xParams
   if(class(methods) != "character" & class(methods) != "list"){
@@ -76,18 +77,25 @@ EnsembleMerge <- function(data, methods = c("Seurat", "Harmony"), return = "Sing
     }
 
   ng = lapply(methods, function(ng){
-    ng = getNeighborGraph(ng, data) 
+    if(!is.na(normalization_method) & normalization_method == "CLR"){
+      ng = getNeighborGraph(ng, data, normalization_method, latent = latent)
+    }
+    else{
+      ng = getNeighborGraph(ng, data, normalization_method, latent)
+    } 
   })
 
+  return(ng)
+
+
   agreement = function(x){
-    ret = Matrix::Matrix(nrow = nrow(x[[1]]), ncol = ncol(x[[1]]), data = 0, sparse = TRUE)
-    ret = as(ret, "dgCMatrix")
-    ret = as(ret, "dgCMatrix")
-    #ret = ng[[1]]
-    temp = Reduce(rbind, lapply(x, summary))
+    temp = base::Reduce(rbind, lapply(x, summary))
     temp = temp[which(duplicated(temp[,c("i", "j")])),]
     temp = unique(temp[,c("i", "j")])
     message("applying boolean values")
+    ret = Matrix::Matrix(nrow = nrow(x[[1]]), ncol = ncol(x[[1]]), data = 0, sparse = TRUE)
+    ret = as(ret, "dgCMatrix")
+    ret = as(ret, "dgCMatrix")
     ret[as.matrix(temp[,c("i", "j")])] = 1
     return(ret)
   }
